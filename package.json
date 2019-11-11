@@ -1,0 +1,23 @@
+{
+  "name": "craigslistwebscraper",
+  "version": "1.0.0",
+  "description": "craigslist web scraper ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewjthomsen/webscraper-craigslist.git"
+  },
+  "author": "Andrew Thomsen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrewjthomsen/webscraper-craigslist/issues"
+  },
+  "homepage": "https://github.com/andrewjthomsen/webscraper-craigslist#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "puppeteer": "^2.0.0"
+  }
+}
