@@ -12,9 +12,7 @@ const scrappingResults = [
     compensation: "Up to US$0.00 per year"
   }
 ];
-async function main() {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
+async function scrapeListings(page) {
   await page.goto(
     "https://sandiego.craigslist.org/search/jjj?query=software+developer"
   );
@@ -37,7 +35,23 @@ async function main() {
       return { title, url, datePosted, hood };
     })
     .get();
-  console.log(results);
+  return listings;
+}
+
+async function scrapeJobDescriptions(listings, page) {
+    for(var i = 0; i < listings.length; i++) {
+        await page.goto(listings[i].url);
+        const html = await page.content(); 
+    }
+}
+
+
+async function main() {
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
+  const listings = await scrapeListings(page);
+  const listingsWithJobDescriptions = await scrapeJobDescriptions(listings, page);
+  console.log(listings);
 }
 
 main();
