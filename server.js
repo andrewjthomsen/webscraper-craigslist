@@ -19,27 +19,21 @@ async function scrapeListings(page) {
   const html = await page.content();
   const $ = cheerio.load(html);
   //  Returns array of objects
-  const results = $(".result-info")
+  const listings = $(".result-info")
     .map((index, element) => {
       const titleElement = $(element).find(".result-title");
       const timeElement = $(element).find(".result-date");
-      const hoodElement = $(element).find(".result-hood");
       const title = $(titleElement).text();
       const url = $(titleElement).attr("href");
       const datePosted = new Date($(timeElement).attr("datetime"));
-      const hood = $(hoodElement)
-        .text()
-        .trim()
-        .replace("(", "")
-        .replace(") ", "");
-      return { title, url, datePosted, hood };
+      return { title, url, datePosted };
     })
     .get();
   return listings;
 }
 
 async function scrapeJobDescriptions(listings, page) {
-    for(var i = 0; i < listings.length; i++) {
+    for (var i = 0; i < listings.length; i++) {
         await page.goto(listings[i].url);
         const html = await page.content(); 
     }
