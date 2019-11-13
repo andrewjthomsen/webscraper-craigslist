@@ -33,18 +33,32 @@ async function scrapeListings(page) {
 }
 
 async function scrapeJobDescriptions(listings, page) {
-    for (var i = 0; i < listings.length; i++) {
-        await page.goto(listings[i].url);
-        const html = await page.content(); 
-    }
+  for (var i = 0; i < listings.length; i++) {
+    await page.goto(listings[i].url);
+    const html = await page.content();
+    const $ = cheerio.load(html);
+    const jobDescription = $("#postingbody").text();
+    // attach property onto listings obj
+    listings[i].jobDescription = jobDescription;
+    console.log(listings[i].jobDescription);
+    await sleep(1000);
+  }
 }
 
+// Limits number of requests made per second
+// New promise is returned only after setTimeOut has run its course 
+async function sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 async function main() {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   const listings = await scrapeListings(page);
-  const listingsWithJobDescriptions = await scrapeJobDescriptions(listings, page);
+  const listingsWithJobDescriptions = await scrapeJobDescriptions(
+    listings,
+    page
+  );
   console.log(listings);
 }
 
