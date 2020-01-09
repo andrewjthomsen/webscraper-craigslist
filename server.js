@@ -1,5 +1,13 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
+const express = require("express");
+
+let app = express();
+let PORT = process.env.PORT || 8080;
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+
+require("./routes/routes")(app);
 
 const scrappingResults = [
   {
@@ -38,17 +46,20 @@ async function scrapeJobDescriptions(listings, page) {
     const html = await page.content();
     const $ = cheerio.load(html);
     const jobDescription = $("#postingbody").text();
+    const compensation = $("p.attrgroup > span:nth-child(1) > b").text();
     // attach property onto listings obj
     listings[i].jobDescription = jobDescription;
+    listings[i].compensation = compensation;
     console.log(listings[i].jobDescription);
+    console.log(listings[i].compensation);
     await sleep(1000);
   }
 }
 
 // Limits number of requests made per second
-// New promise is returned only after setTimeOut has run its course 
+// New promise is returned only after setTimeOut has run its course
 async function sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 async function main() {
@@ -62,4 +73,8 @@ async function main() {
   console.log(listings);
 }
 
-main();
+// main();
+app.listen(PORT, function(){
+  console.log("Listening on PORT 8080");
+  main();
+})
