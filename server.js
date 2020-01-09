@@ -4,7 +4,7 @@ const express = require("express");
 
 let app = express();
 let PORT = process.env.PORT || 8080;
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 require("./routes/routes")(app);
@@ -41,7 +41,7 @@ async function scrapeListings(page) {
 }
 
 async function scrapeJobDescriptions(listings, page) {
-  for (var i = 0; i < listings.length; i++) {
+  for (var i = 0; i < 11; i++) {
     await page.goto(listings[i].url);
     const html = await page.content();
     const $ = cheerio.load(html);
@@ -70,11 +70,13 @@ async function main() {
     listings,
     page
   );
-  console.log(listings);
+  let listingsArray = [];
+  listingsArray.push(listings);
+  console.log(listingsArray);
+  module.exports = listingsArray;
 }
 
-// main();
-app.listen(PORT, function(){
+app.listen(PORT, function() {
   console.log("Listening on PORT 8080");
   main();
-})
+});
