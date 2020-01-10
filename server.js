@@ -2,13 +2,13 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const express = require("express");
 const path = require("path");
+const fs = require("fs")
 
 let app = express();
 let PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-let listingsArray = [];
 
 const scrappingResults = [
   {
@@ -71,21 +71,19 @@ async function main() {
     listings,
     page
   );
-  // let listingsArray = [];
-  listingsArray.push(listings);
-  // console.log(listingsArray);
-  // return listingsArray;
+  // return _callback(listings);
+  fs.writeFileSync('listings.json', JSON.stringify(listings))
 }
-console.log(listingsArray);
+let data = require("listings.json");
 // GET method route
 app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 app.get("/displaylistings", function(req, res) {
-  return res.json(listingsArray);
+  res.json(data);
 });
 app.listen(PORT, function() {
   console.log("Listening on PORT 8080");
   main();
 });
-console.log(listingsArray);
+
